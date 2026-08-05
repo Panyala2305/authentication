@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 
-function Dashboard() {
+function Product() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -88,4 +88,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Product;

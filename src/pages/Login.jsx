@@ -34,7 +34,7 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        navigate("/dashboard");
+        navigate("/products");
       } else {
         setMessage(data.message);
       }
