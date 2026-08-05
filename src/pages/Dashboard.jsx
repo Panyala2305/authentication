@@ -2,90 +2,90 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 
 function Dashboard() {
-  const [products, setProducts] = useState([]);
+  // State to store logged-in user
+  const [user, setUser] = useState(null);
+
+  // Loading state
   const [loading, setLoading] = useState(true);
+
+  // Error message
   const [message, setMessage] = useState("");
 
+  // Fetch logged-in user details
   useEffect(() => {
-    const fetchProducts = async () => {
+    const getProfile = async () => {
       try {
-        const response = await fetch("https://fakestoreapi.com/products");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
+        const response = await fetch(
+          "http://localhost:5001/api/auth/profile",
+          {
+            method: "GET",
+            credentials: "include", // Send HttpOnly Cookie
+          }
+        );
 
         const data = await response.json();
-        setProducts(data);
+
+        if (response.ok) {
+          setUser(data.user);
+        } else {
+          setMessage(data.message);
+        }
       } catch (error) {
         console.log(error);
-        setMessage("Failed to load products");
+        setMessage("Server Error");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
+    getProfile();
   }, []);
 
+  // Loading Screen
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <h2 className="text-2xl font-semibold">Loading...</h2>
+        <h2 className="text-xl font-semibold">
+          Loading...
+        </h2>
       </div>
     );
   }
 
   return (
     <>
-      <Navbar />
+    <Navbar />
+    <div className="flex justify-center items-center h-screen bg-gray-100">
 
-      <div className="min-h-screen bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Products
-        </h1>
+      <div className="bg-white shadow-md rounded p-6 w-96">
+
+        <h2 className="text-2xl font-bold mb-5 text-center">
+          Dashboard
+        </h2>
 
         {message && (
-          <p className="text-center text-red-500 mb-6">
+          <p className="text-red-500 text-center mb-3">
             {message}
           </p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 p-4"
-            >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="h-48 w-full object-contain"
-              />
+        {user && (
+          <>
+            <p className="mb-2">
+              <strong>Username :</strong> {user.username}
+            </p>
 
-              <h2 className="mt-4 font-semibold text-lg line-clamp-2">
-                {product.title}
-              </h2>
+            <p>
+              <strong>Email :</strong> {user.email}
+            </p>
+          </>
+        )}
 
-              <p className="text-gray-600 text-sm mt-2 line-clamp-3">
-                {product.description}
-              </p>
-
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-xl font-bold text-green-600">
-                  ${product.price}
-                </span>
-
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                  Buy Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
+
+    </div>
     </>
   );
 }
 
-export default Dashboard;
+export default Dashboard
