@@ -58,15 +58,15 @@ function Navbar() {
         {user ? `Welcome, ${user.username}` : "MERN Auth"}
       </h1>
 
-      <div className="flex gap-4">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/contact">Contact</Link>
+      <div className="flex gap-4 items-center">
+        <Link to="/products" className="hover:underline">Products</Link>
+        <Link to="/orders" className="hover:underline">Orders</Link>
+        <Link to="/dashboard" className="hover:underline">Dashboard</Link>
 
-        {location.pathname === "/dashboard" && (
+        {user && (
           <button
             onClick={handleLogout}
-            className="bg-red-500 px-3 py-1 rounded"
+            className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition cursor-pointer"
           >
             Logout
           </button>

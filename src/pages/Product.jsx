@@ -28,6 +28,66 @@ function Product() {
     fetchProducts();
   }, []);
 
+  const handlePayment = async (product) => {
+    try {
+      // Create Razorpay order
+      
+      const response = await fetch(
+        "http://localhost:5000/api/payment/create-order",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: product.price,
+          }),
+        }
+      );
+
+      const order = await response.json();
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+        amount: order.amount,
+
+        currency: order.currency,
+
+        name: "My Store",
+
+        description: product.title,
+
+        image: product.image,
+
+        order_id: order.id,
+
+        handler: async function (response) {
+          console.log("Payment Successful");
+
+          console.log(response);
+        },
+
+        prefill: {
+          name: "",
+
+          email: "",
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+
+      razorpay.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -76,7 +136,7 @@ function Product() {
                   ${product.price}
                 </span>
 
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                <button onClick={() => handlePayment(product)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                   Buy Now
                 </button>
               </div>
