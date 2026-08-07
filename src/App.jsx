@@ -5,12 +5,13 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Product from "./pages/Product";
+import Orders from "./pages/Orders";
 
 
 function App() {
   return (
     <>
-      
+
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
 
@@ -20,7 +21,8 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/products" element={<Product />} />
-        
+        <Route path="/orders" element={<Orders />} />
+
       </Routes>
     </>
   );
